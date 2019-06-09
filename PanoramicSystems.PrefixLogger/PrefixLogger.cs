@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace PanoramicSystems.PrefixLogger
+namespace PanoramicSystems
 {
 	public class PrefixLogger : ILogger
 	{

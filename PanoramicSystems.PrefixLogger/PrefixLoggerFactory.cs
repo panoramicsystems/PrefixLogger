@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace PanoramicSystems.PrefixLogger
+namespace PanoramicSystems
 {
 	public class PrefixLoggerFactory : ILoggerFactory
 	{

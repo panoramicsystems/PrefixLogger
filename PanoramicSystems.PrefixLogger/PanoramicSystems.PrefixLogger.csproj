@@ -9,8 +9,8 @@
 		<Description>Prefix Logger</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>Logging</PackageTags>
-		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
-		<Version>1.0.2</Version>
+		<PackageReleaseNotes>Adjusted namespace</PackageReleaseNotes>
+		<Version>1.0.3</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
