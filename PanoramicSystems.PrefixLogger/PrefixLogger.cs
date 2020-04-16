@@ -10,11 +10,7 @@ namespace PanoramicSystems
 
 		private readonly ILogger _logger;
 
-		public PrefixLogger(string prefix, ILogger logger) : this(prefix, ": ", logger)
-		{
-		}
-
-		public PrefixLogger(string prefix, string separator, ILogger logger)
+		public PrefixLogger(ILogger logger, string prefix, string separator = ": ")
 		{
 			if (string.IsNullOrWhiteSpace(prefix))
 			{

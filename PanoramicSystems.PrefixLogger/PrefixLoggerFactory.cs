@@ -1,25 +1,38 @@
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace PanoramicSystems
 {
 	public class PrefixLoggerFactory : ILoggerFactory
 	{
-		private readonly string _prefix;
+		public string Prefix { get; set; }
+		public string Separator { get; set; }
 		private readonly ILoggerFactory _loggerFactory;
 
 		private bool disposed;
 
-		public PrefixLoggerFactory(string prefix, ILoggerFactory loggerFactory)
+		public PrefixLoggerFactory(ILoggerFactory loggerFactory, string prefix, string separator = ": ")
 		{
-			_prefix = prefix;
-			_loggerFactory = loggerFactory;
+			if (string.IsNullOrWhiteSpace(prefix))
+			{
+				throw new ArgumentNullException(nameof(prefix));
+			}
+			Prefix = prefix;
+
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				throw new ArgumentNullException(nameof(separator));
+			}
+			Separator = separator;
+
+			_loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
 		public void AddProvider(ILoggerProvider provider)
 			=> _loggerFactory.AddProvider(provider);
 
 		public ILogger CreateLogger(string categoryName)
-			=> new PrefixLogger(_prefix, _loggerFactory.CreateLogger(categoryName));
+			=> new PrefixLogger(_loggerFactory.CreateLogger(categoryName), Prefix, Separator);
 
 		protected virtual void Dispose(bool disposing)
 		{
