@@ -5,12 +5,29 @@ namespace PanoramicSystems
 {
 	public class PrefixLogger : ILogger
 	{
-		private readonly string _prefix;
+		public string Prefix { get; set; }
+		public string Separator { get; set; }
+
 		private readonly ILogger _logger;
 
-		public PrefixLogger(string prefix, ILogger logger)
+		public PrefixLogger(string prefix, ILogger logger) : this(prefix, ": ", logger)
 		{
-			_prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
+		}
+
+		public PrefixLogger(string prefix, string separator, ILogger logger)
+		{
+			if (string.IsNullOrWhiteSpace(prefix))
+			{
+				throw new ArgumentNullException(nameof(prefix));
+			}
+			Prefix = prefix;
+
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				throw new ArgumentNullException(nameof(separator));
+			}
+			Separator = separator;
+
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
@@ -22,15 +39,15 @@ namespace PanoramicSystems
 		{
 			var message = formatter != null && exception != null
 				? formatter(state, exception)
-				: state.ToString();
+				: state?.ToString() ?? string.Empty;
 
 			if (exception == null)
 			{
-				_logger.Log(logLevel, eventId, _prefix + ": " + message);
+				_logger.Log(logLevel, eventId, Prefix + Separator + message);
 			}
 			else
 			{
-				_logger.Log(logLevel, eventId, _prefix + ": " + message, exception, formatter);
+				_logger.Log(logLevel, eventId, Prefix + Separator + message, exception, formatter);
 			}
 		}
 	}
