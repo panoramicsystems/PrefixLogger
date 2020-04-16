@@ -10,7 +10,7 @@ namespace PanoramicSystems
 
 		private readonly ILogger _logger;
 
-		public PrefixLogger(ILogger logger, string prefix, string separator = ": ")
+		public PrefixLogger(ILogger logger, string prefix, string? separator = null)
 		{
 			if (string.IsNullOrWhiteSpace(prefix))
 			{
@@ -22,7 +22,7 @@ namespace PanoramicSystems
 			{
 				throw new ArgumentNullException(nameof(separator));
 			}
-			Separator = separator;
+			Separator = separator ?? ": ";
 
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
