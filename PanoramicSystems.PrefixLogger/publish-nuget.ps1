@@ -62,6 +62,7 @@ try {
 
 	# Build and test
 	dotnet build -c Release
+	if (-not $?) {throw "Error building"}
 	#dotnet build ..\PanoramicSystems.PrefixLogger.Test -c Release
 	#dotnet test ..\PanoramicSystems.PrefixLogger.Test -c Release
 	#if ($lastexitcode -ne 0) {
@@ -70,6 +71,7 @@ try {
 	#}
 
 	dotnet pack -c Release
+	if (-not $?) {throw "Error packing"}
 
 	$mostRecentPackage = Get-ChildItem bin\Release\*.nupkg | Sort-Object LastWriteTime | Select-Object -last 1
 	Write-Host "Publishing $mostRecentPackage..."
