@@ -11,12 +11,12 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>Logging</PackageTags>
 		<PackageIconUrl>https://en.gravatar.com/userimage/33568853/8935cd04180f2c2e1c639cd310b60875.png?size=200</PackageIconUrl>
-		<PackageReleaseNotes>Added PrefixedWith nuget extension</PackageReleaseNotes>
-		<Version>2.0.2</Version>
+		<PackageReleaseNotes>Fixed issue where not providing a separator causes an exception</PackageReleaseNotes>
+		<Version>2.0.3</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
 	</ItemGroup>
 
 </Project>
