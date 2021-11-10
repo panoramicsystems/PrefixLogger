@@ -10,7 +10,10 @@ namespace PanoramicSystems
         private readonly ILoggerFactory _loggerFactory;
         private bool isDisposed;
 
-        public PrefixLoggerFactory(ILoggerFactory loggerFactory, string prefix, string separator = ": ")
+        public PrefixLoggerFactory(ILoggerFactory loggerFactory, string prefix) : this(loggerFactory, prefix, ": ")
+        { }
+
+        public PrefixLoggerFactory(ILoggerFactory loggerFactory, string prefix, string separator)
         {
             if (string.IsNullOrWhiteSpace(prefix))
             {

@@ -25,7 +25,9 @@ namespace PanoramicSystems.PrefixLoggerTests
         [InlineData("ThePrefix", null, null, "ThePrefix: [null]")]
         public void BasicStringTests(string prefix, string? separator, string? input, string expectedOutput)
         {
-            var prefixLogger = new PrefixLogger(_logger, prefix, separator);
+            var prefixLogger = separator == null
+                ? new PrefixLogger(_logger, prefix)
+                : new PrefixLogger(_logger, prefix, separator);
 #pragma warning disable CA2254 // Template should be a static expression - Not relevant for unit test
             prefixLogger.LogInformation(input);
 #pragma warning restore CA2254 // Template should be a static expression
