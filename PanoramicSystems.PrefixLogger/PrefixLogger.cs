@@ -54,8 +54,7 @@ namespace PanoramicSystems
                         ? formatter(originalState, exception)
                         : originalState?.ToString()
                             ?? string.Empty);
-                _logger.Log(logLevel, eventId, newState, exception, (_, exception) =>
-                    message);
+                _logger.Log(logLevel, eventId, newState, exception, (_, __) => message);
                 return;
             }
 
