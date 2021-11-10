@@ -6,14 +6,21 @@
 		<LangVersion>8.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>Panoramic Systems Limited</Authors>
-		<Copyright>Copyright © Panoramic Systems Limited 2020</Copyright>
+		<Copyright>Copyright © Panoramic Systems Limited 2021</Copyright>
 		<Description>Prefix Logger</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageTags>Logging</PackageTags>
-		<PackageIconUrl>https://en.gravatar.com/userimage/33568853/8935cd04180f2c2e1c639cd310b60875.png?size=200</PackageIconUrl>
-		<PackageReleaseNotes>Fixed issue where not providing a separator causes an exception</PackageReleaseNotes>
-		<Version>2.0.3</Version>
+		<PackageTags>logging serilog</PackageTags>
+		<PackageIcon>psl.png</PackageIcon>
+		<PackageReleaseNotes>PrefixLogger now respects structured logging correctly, original message template and state are used.</PackageReleaseNotes>
+		<Version>2.0.4</Version>
+		<RepositoryUrl>https://github.com/panoramicsystems/PrefixLogger</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="psl.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
