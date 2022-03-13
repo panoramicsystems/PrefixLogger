@@ -7,13 +7,13 @@ using Xunit.Abstractions;
 
 namespace PanoramicSystems.PrefixLoggerTests
 {
-	public class UnitTest1
+	public class UnitTests
 	{
-		private readonly ICacheLogger<UnitTest1> _logger;
+		private readonly ICacheLogger<UnitTests> _logger;
 
-		public UnitTest1(ITestOutputHelper output)
+		public UnitTests(ITestOutputHelper output)
 		{
-			_logger = output.BuildLoggerFor<UnitTest1>();
+			_logger = output.BuildLoggerFor<UnitTests>();
 		}
 
 		[Theory]
