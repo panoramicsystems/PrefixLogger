@@ -44,7 +44,11 @@ namespace PanoramicSystems
 		{
 			if (state is IEnumerable<KeyValuePair<string, object>> oldState)
 			{
-				var newState = new List<KeyValuePair<string, object>>();
+				var newState = new List<KeyValuePair<string, object>>
+				{
+					new KeyValuePair<string, object>(_plPrefixWithId, Prefix),
+					new KeyValuePair<string, object>(_plPrefixSeparatorWithId, Separator)
+				};
 				foreach (var item in oldState)
 				{
 					if (item.Key == "{OriginalFormat}")
@@ -56,8 +60,6 @@ namespace PanoramicSystems
 						newState.Add(item);
 					}
 				}
-				newState.Add(new KeyValuePair<string, object>(_plPrefixWithId, Prefix));
-				newState.Add(new KeyValuePair<string, object>(_plPrefixSeparatorWithId, Separator));
 				var message = Prefix +
 					Separator +
 					(formatter != null
