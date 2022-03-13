@@ -30,7 +30,7 @@ namespace PanoramicSystems
 
 			Prefix = prefix;
 			Separator = separator;
-			_prefixId = Guid.NewGuid().ToString();
+			_prefixId = Guid.NewGuid().ToString("N");
 			_plPrefixWithId = "plPrefix" + _prefixId;
 			_plPrefixSeparatorWithId = "plSeparator" + _prefixId;
 			_plPrefixAndSeparatorWithId = "{" + _plPrefixWithId + "}{" + _plPrefixSeparatorWithId + "}";
