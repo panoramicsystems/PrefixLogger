@@ -11,6 +11,11 @@ namespace PanoramicSystems
 
 		private readonly ILogger _logger;
 
+		internal readonly string _prefixId;
+		internal readonly string _plPrefixWithId;
+		internal readonly string _plPrefixSeparatorWithId;
+		internal readonly string _plPrefixAndSeparatorWithId;
+
 		public PrefixLogger(ILogger logger, string prefix) : this(logger, prefix, ": ")
 		{
 		}
@@ -21,39 +26,43 @@ namespace PanoramicSystems
 			{
 				throw new ArgumentNullException(nameof(prefix));
 			}
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
 			Prefix = prefix;
 			Separator = separator;
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			_prefixId = Guid.NewGuid().ToString();
+			_plPrefixWithId = "plPrefix" + _prefixId;
+			_plPrefixSeparatorWithId = "plSeparator" + _prefixId;
+			_plPrefixAndSeparatorWithId = "{" + _plPrefixWithId + "}{" + _plPrefixSeparatorWithId + "}";
 		}
 
 		public IDisposable BeginScope<TState>(TState state) => _logger.BeginScope(state);
 
 		public bool IsEnabled(LogLevel logLevel) => _logger.IsEnabled(logLevel);
 
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState originalState, Exception exception, Func<TState, Exception, string> formatter)
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
-			if (originalState is IEnumerable<KeyValuePair<string, object>> oldState)
+			if (state is IEnumerable<KeyValuePair<string, object>> oldState)
 			{
 				var newState = new List<KeyValuePair<string, object>>();
 				foreach (var item in oldState)
 				{
 					if (item.Key == "{OriginalFormat}")
 					{
-						newState.Add(new KeyValuePair<string, object>(item.Key, "{plPrefix}{plSeparator}" + item.Value));
+						newState.Add(new KeyValuePair<string, object>(item.Key, _plPrefixAndSeparatorWithId + item.Value));
 					}
 					else
 					{
 						newState.Add(item);
 					}
 				}
-				newState.Add(new KeyValuePair<string, object>("plPrefix", Prefix));
-				newState.Add(new KeyValuePair<string, object>("plSeparator", Separator));
+				newState.Add(new KeyValuePair<string, object>(_plPrefixWithId, Prefix));
+				newState.Add(new KeyValuePair<string, object>(_plPrefixSeparatorWithId, Separator));
 				var message = Prefix +
 					Separator +
 					(formatter != null
-						? formatter(originalState, exception)
-						: originalState?.ToString()
-							?? string.Empty);
+						? formatter(state, exception)
+						: state.ToString());
 				_logger.Log(logLevel, eventId, newState, exception, (_, __) => message);
 				return;
 			}
@@ -62,7 +71,7 @@ namespace PanoramicSystems
 			_logger.Log(
 				logLevel,
 				eventId,
-				originalState,
+				state,
 				exception,
 				(TState state, Exception ex) =>
 				{
@@ -73,21 +82,6 @@ namespace PanoramicSystems
 					return Prefix + Separator + message;
 				}
 			);
-
-			//_logger.Log(
-			//    logLevel,
-			//    eventId,
-			//    state,
-			//    exception,
-			//    (TState state, Exception ex) =>
-			//    {
-			//        var message = formatter != null
-			//        ? formatter(state, exception)
-			//        : state?.ToString()
-			//            ?? string.Empty;
-			//        return Prefix + Separator + message;
-			//    }
-			//);
 		}
 	}
 }

@@ -3,23 +3,28 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>Panoramic Systems Limited</Authors>
-		<Copyright>Copyright © Panoramic Systems Limited 2021</Copyright>
+		<Copyright>Copyright © Panoramic Systems Limited 2022</Copyright>
 		<Description>Prefix Logger</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>logging serilog</PackageTags>
 		<PackageIcon>psl.png</PackageIcon>
-		<PackageReleaseNotes>PrefixLogger now respects structured logging correctly, original message template and state are used.</PackageReleaseNotes>
-		<Version>2.0.5</Version>
+		<PackageReleaseNotes>PrefixLogger now generates an internal Id allowing nested prefixloggers with more reliable prefix and separator identification.</PackageReleaseNotes>
+		<Version>2.0.6</Version>
 		<RepositoryUrl>https://github.com/panoramicsystems/PrefixLogger</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisMode>All</AnalysisMode>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="psl.png" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="PanoramicSystems.PrefixLoggerTests" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -34,10 +34,26 @@ namespace PanoramicSystems.PrefixLoggerTests
 			_ = _logger.Last!.Message.Should().Be(expectedOutput);
 			var state = _logger.Last!.State as IEnumerable<KeyValuePair<string, object>>;
 			_ = state.Should().HaveCount(4);
-			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be("{plPrefix}{plSeparator}{Message}");
+			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be($"{{{prefixLogger._plPrefixWithId}}}{{{prefixLogger._plPrefixSeparatorWithId}}}{{Message}}");
 			_ = state.Should().ContainKey("Message").WhoseValue.Should().Be(input);
-			_ = state.Should().ContainKey("plPrefix").WhoseValue.Should().Be(prefix);
-			_ = state.Should().ContainKey("plSeparator").WhoseValue.Should().Be(separator ?? ": ");
+			_ = state.Should().ContainKey(prefixLogger._plPrefixWithId).WhoseValue.Should().Be(prefix);
+			_ = state.Should().ContainKey(prefixLogger._plPrefixSeparatorWithId).WhoseValue.Should().Be(separator ?? ": ");
+		}
+
+		[Fact]
+		public void FormattedTest_1Parameter_StateIsCorrect()
+		{
+			var prefixLogger = new PrefixLogger(_logger, "ThePrefix");
+			prefixLogger.LogInformation("The first number is {firstNumber}.", 42);
+			_ = _logger.Entries.Should().HaveCount(1);
+			_ = _logger.Last.Should().NotBeNull();
+			_ = _logger.Last!.Message.Should().Be("ThePrefix: The first number is 42.");
+			var state = _logger.Last!.State as IEnumerable<KeyValuePair<string, object>>;
+			_ = state.Should().HaveCount(4);
+			_ = state.Should().ContainKey("firstNumber").WhoseValue.Should().Be(42);
+			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be($"{{{prefixLogger._plPrefixWithId}}}{{{prefixLogger._plPrefixSeparatorWithId}}}The first number is {{firstNumber}}.");
+			_ = state.Should().ContainKey(prefixLogger._plPrefixWithId).WhoseValue.Should().Be("ThePrefix");
+			_ = state.Should().ContainKey(prefixLogger._plPrefixSeparatorWithId).WhoseValue.Should().Be(": ");
 		}
 
 		[Fact]
@@ -52,25 +68,32 @@ namespace PanoramicSystems.PrefixLoggerTests
 			_ = state.Should().HaveCount(5);
 			_ = state.Should().ContainKey("firstNumber").WhoseValue.Should().Be(42);
 			_ = state.Should().ContainKey("secondNumber").WhoseValue.Should().Be(69);
-			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be("{plPrefix}{plSeparator}The first number is {firstNumber}, the second number is {secondNumber}.");
-			_ = state.Should().ContainKey("plPrefix").WhoseValue.Should().Be("ThePrefix");
-			_ = state.Should().ContainKey("plSeparator").WhoseValue.Should().Be(": ");
+			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be($"{{{prefixLogger._plPrefixWithId}}}{{{prefixLogger._plPrefixSeparatorWithId}}}The first number is {{firstNumber}}, the second number is {{secondNumber}}.");
+			_ = state.Should().ContainKey(prefixLogger._plPrefixWithId).WhoseValue.Should().Be("ThePrefix");
+			_ = state.Should().ContainKey(prefixLogger._plPrefixSeparatorWithId).WhoseValue.Should().Be(": ");
 		}
 
 		[Fact]
-		public void FormattedTest_1Parameter_StateIsCorrect()
+		public void MultiplePrefixLoggers_StateIsCorrect()
 		{
-			var prefixLogger = new PrefixLogger(_logger, "ThePrefix");
-			prefixLogger.LogInformation("The first number is {firstNumber}.", 42);
+			var firstPrefixLogger = _logger.PrefixedWith("FirstPrefix");
+			var plPrefix1WithId = firstPrefixLogger._plPrefixWithId;
+			var plSeparator1WithId = firstPrefixLogger._plPrefixSeparatorWithId;
+			var secondPrefixLogger = firstPrefixLogger.PrefixedWith("SecondPrefix", "# ");
+			var plPrefix2WithId = secondPrefixLogger._plPrefixWithId;
+			var plSeparator2WithId = secondPrefixLogger._plPrefixSeparatorWithId;
+			secondPrefixLogger.LogInformation("The answer is, of course, {firstNumber}.", 42);
 			_ = _logger.Entries.Should().HaveCount(1);
 			_ = _logger.Last.Should().NotBeNull();
-			_ = _logger.Last!.Message.Should().Be("ThePrefix: The first number is 42.");
+			_ = _logger.Last!.Message.Should().Be("FirstPrefix: SecondPrefix# The answer is, of course, 42.");
 			var state = _logger.Last!.State as IEnumerable<KeyValuePair<string, object>>;
-			_ = state.Should().HaveCount(4);
+			_ = state.Should().HaveCount(6);
 			_ = state.Should().ContainKey("firstNumber").WhoseValue.Should().Be(42);
-			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be("{plPrefix}{plSeparator}The first number is {firstNumber}.");
-			_ = state.Should().ContainKey("plPrefix").WhoseValue.Should().Be("ThePrefix");
-			_ = state.Should().ContainKey("plSeparator").WhoseValue.Should().Be(": ");
+			_ = state.Should().ContainKey("{OriginalFormat}").WhoseValue.Should().Be($"{{{plPrefix1WithId}}}{{{plSeparator1WithId}}}{{{plPrefix2WithId}}}{{{plSeparator2WithId}}}The answer is, of course, {{firstNumber}}.");
+			_ = state.Should().ContainKey(plPrefix1WithId).WhoseValue.Should().Be("FirstPrefix");
+			_ = state.Should().ContainKey(plSeparator1WithId).WhoseValue.Should().Be(": ");
+			_ = state.Should().ContainKey(plPrefix2WithId).WhoseValue.Should().Be("SecondPrefix");
+			_ = state.Should().ContainKey(plSeparator2WithId).WhoseValue.Should().Be("# ");
 		}
 	}
 }
