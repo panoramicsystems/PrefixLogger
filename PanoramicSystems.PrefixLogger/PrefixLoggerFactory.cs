@@ -19,12 +19,14 @@ namespace PanoramicSystems
 			{
 				throw new ArgumentNullException(nameof(prefix));
 			}
+
 			Prefix = prefix;
 
 			if (string.IsNullOrWhiteSpace(separator))
 			{
 				throw new ArgumentNullException(nameof(separator));
 			}
+
 			Separator = separator;
 
 			_loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
